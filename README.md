@@ -17,12 +17,15 @@ The program expects a binary mask input with shape H x W x N, where N channels i
 
 Example of application on cell images:
 
-| - | - | - |
+| Max-Projected Image + 2D annotations | Raw Z-stack | Predicted 3D cell annotations |
 |---|---|---|
-| <img src="/images/Tutorial_6.png" alt="drawing" width="1600"/> | ![Z-stack](/images/Tutorial_6_image.gif) | ![Output binary](/images/Tutorial_6_output.gif) |
-<!-- ![Max Proj](/images/Tutorial_6.png) -->
-<!-- ![Z-stack](/images/Tutorial_6_image.gif) -->
-<!-- ![Output binary](/images/Tutorial_6_output.gif) -->
+| <img src="/images/Tutorial_6.png" alt="drawing" width="1500"/> | ![Z-stack](/images/Tutorial_6_image.gif) | ![Output binary](/images/Tutorial_6_output.gif) |
+
+Example of application on test cases with overlapping ellipsoids:
+
+| Max-Projected Image + 2D annotations | Generated Z-stack w/ noise | Ground-truth label | Predicted 3D cell annotations |
+|---|---|---|---|
+| <img src="/images/Tutorial_7_Max.png" alt="drawing" width="1500"/> | ![test Z-stack](/images/Tutorial_7_IM.gif) | ![gt test stack](/images/Tutorial_7_GT.gif) | ![test Output binary](/images/Tutorial_7_Pred.gif) |
 
 **Coding Practices**:
 

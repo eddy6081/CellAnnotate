@@ -318,3 +318,19 @@ def save_max_proj(IM, edges, pth = None, out_name="test_proj"):
 		plt.plot(obj_coords[1,:],obj_coords[0,:],'r--')
 	plt.axis('off')
 	plt.show()
+
+def produce_vertices(M):
+	from skimage import measure
+	polygons_x = []
+	polygons_y = []
+	for binary_mask in np.rollaxis(M,-1,0):
+		contours = measure.find_contours(binary_mask, 0.5, fully_connected='high') #see documentation for 0.5
+		for contour in contours:
+			contour = np.flip(contour, axis=1)
+			if len(contour) < 3:
+				continue
+			segmentation_x = contour[:,0].tolist()
+			segmentation_y = contour[:,1].tolist()
+			polygons_x.append(segmentation_x)
+			polygons_y.append(segmentation_y)
+	return [np.array([x,y]) for (x,y) in zip(polygons_x,polygons_y)]
