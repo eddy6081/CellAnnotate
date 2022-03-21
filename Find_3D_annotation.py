@@ -43,7 +43,7 @@ import numpy
 from scipy.optimize import curve_fit
 import skimage.measure
 from scipy.signal import argrelextrema
-from CellDataset import CellDataset
+from CellDataset import *
 
 class Find_3D(object):
 	def __init__(self):
@@ -526,12 +526,12 @@ Working Examples commented below!
 
 
 ##With CellDataset
-# CP = CellDataset(dataset_dir="/users/czeddy/documents/auto_seg/datasets/v7_mini")
+# CP = CellDataset(dataset_path="/Users/czeddy/Documents/Auto_Seg/CellAnnotate/CellAnnotate/datasets/example")
 # CP.run_prep()
-# M, IM = CP.load_image_gt(0)
+# M, IM, _ = CP.load_image_gt(0)
 ##import Find_3D_annotation
-# F = Find_3D_annotation.Find_3D()
-# O, Iall = F.run_analysis(mask, IM)
+# F = Find_3D()
+# O, Iall = F.run_analysis(M, IM)
 # F.compare_z_stacks(np.squeeze(IM),Iall)
 
 ## With CellPose Network
@@ -540,6 +540,6 @@ Working Examples commented below!
 # mask = CP.dataset_train.load_mask(0)
 # IM = CP.dataset_train.load_image(0, CP.config.INPUT_DIM, mask=mask)
 ##import Find_3D_annotation
-# F = Find_3D_annotation.Find_3D()
+# F = Find_3D()
 # O, Iall = F.run_analysis(mask, IM)
 # F.compare_z_stacks(np.squeeze(IM),Iall)

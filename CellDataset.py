@@ -2,6 +2,8 @@ import numpy as np
 import skimage.io
 import skimage.draw
 import scipy.stats
+import os
+import json
 
 class CellDataset(object):
 
@@ -21,6 +23,12 @@ class CellDataset(object):
 		self.dataset_dir = dataset_path
 
 		self.dimensionality=dimensionality
+
+		self._image_ids = []
+		self.image_info = []
+		# Background is always the first class
+		self.class_info = [{"source": "", "id": 0, "name": "BG"}]
+		self.source_class_ids = {}
 
 	def load_cell(self, dataset_dir, subset=None):
 		"""Load a subset of the cell dataset.
@@ -63,6 +71,20 @@ class CellDataset(object):
 		image_info.update(kwargs)
 		self.image_info.append(image_info)
 
+	def add_class(self, source, class_id, class_name):
+		assert "." not in source, "Source name cannot contain a dot"
+		# Does the class exist already?
+		for info in self.class_info:
+			if info['source'] == source and info["id"] == class_id:
+				# source.class_id combination already available, skip
+				return
+		# Add the class
+		self.class_info.append({
+			"source": source,
+			"id": class_id,
+			"name": class_name,
+		})
+
 	def prepare(self, class_map=None):
 		"""Prepares the Dataset class for use.
 		TODO: class map is not supported yet. When done, it should handle mapping
@@ -84,7 +106,7 @@ class CellDataset(object):
 		self.class_from_source_map = {"{}.{}".format(info['source'], info['id']): id
 									  for info, id in zip(self.class_info, self.class_ids)}
 		self.image_from_source_map = {"{}.{}".format(info['source'], info['id']): id
-									  for info, id in zip(self.image_info, self.image_ids)}
+									  for info, id in zip(self.image_info, self._image_ids)}
 
 		# Map sources to class_ids they support
 		self.sources = list(set([i['source'] for i in self.class_info]))
@@ -126,7 +148,6 @@ class CellDataset(object):
 			#I have verified this notation is correct CE 11/20/20
 			poly = np.transpose(np.array((vertx,verty)))
 			rr, cc = skimage.draw.polygon(poly[:,0], poly[:,1], mask.shape[0:-1])
-			RR, CC = skimage.draw.polygon_perimeter(poly[:,0], poly[:,1], mask.shape[0:-1])
 			try:
 				mask[rr,cc,i] = 1
 			except:
@@ -135,6 +156,44 @@ class CellDataset(object):
 			#put each annotation in a different channel.
 
 		return mask.astype(np.bool)
+
+	def load_borders(self, image_id):
+		"""Generate instance masks for an image.
+	   Returns:
+		masks: A bool array of shape [height, width, instance count] with
+			one mask per instance.
+		class_ids: a 1D array of class IDs of the instance masks.
+		"""
+		# If not a balloon dataset image, delegate to parent class.
+		image_info = self.image_info[image_id]
+		if image_info["source"] != "cell":
+			return super(self.__class__, self).load_mask(image_id)
+			#see config.py for parent class default load_mask function
+
+		# Get mask directory from image path
+		mask_dir = os.path.join(image_info['path'], "gt")
+
+		data = load_json_data(os.path.join(mask_dir,image_info['id']+".json")) #load file with same name.
+
+		# Convert polygons to a bitmap mask of shape
+		# [height, width, instance_count]
+		mask = np.zeros([data["images"]["height"], data["images"]["width"], len(data['annotations']['regions']['area'])],
+						dtype=np.uint8)
+						#puts each mask into a different channel.
+		#pull polygon coordinates.
+		coords = []
+		for i,[verty,vertx] in enumerate(zip(data['annotations']['regions']['x_vert'],data['annotations']['regions']['y_vert'])):
+			#alright, so this appears backwards (vertx, verty) but it is this way because of how matplotlib does plotting.
+			#I have verified this notation is correct CE 11/20/20
+			poly = np.transpose(np.array((vertx,verty)))
+			RR, CC = skimage.draw.polygon_perimeter(poly[:,0], poly[:,1], mask.shape[0:-1])
+			try:
+				coords.append(np.array([RR,CC]))
+			except:
+				print("too many objects, needs debugging")
+				print(self.image_info[image_id])
+
+		return coords
 
 	def load_image(self, image_id, mask=None, avg_pixel=None):
 		"""Load the specified image and return a [H,W,Z,1] Numpy array.
@@ -226,11 +285,36 @@ class CellDataset(object):
 		self.prepare()
 
 	def load_image_gt(self, image_id):
+		print("Loading mask and z-stack of {}".format(self.image_info[image_id]['id']))
 		mask = self.load_mask(image_id)
+		edges = self.load_borders(image_id)
 		IM = self.load_image(image_id, mask=mask)
-		return mask, IM
+		return mask, IM, edges
 
 def load_json_data(pth):
 	with open(pth) as f:
 		data=json.load(f)
 	return data
+
+def save_image_stack(IM, pth=None, out_name="test"):
+	import tifffile
+	#IM should have shape H x W x N.
+	IM = np.rollaxis(IM, -1, 0)
+	if pth is not None:
+		tifffile.imwrite(os.path.join(pth,out_name+".ome.tif"),IM)
+	else:
+		tifffile.imwrite(out_name+".ome.tif",IM)
+
+def save_max_proj(IM, edges, pth = None, out_name="test_proj"):
+	import tifffile
+	import matplotlib.pyplot as plt
+	#IM should be shape H x W x Z
+	#edges should be list length N
+	if IM.ndim>2:
+		#max project
+		IM = np.max(IM,axis=2)
+	plt.imshow(IM)
+	for obj_coords in edges:
+		plt.plot(obj_coords[1,:],obj_coords[0,:],'r--')
+	plt.axis('off')
+	plt.show()

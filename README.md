@@ -13,27 +13,36 @@ The program expects a binary mask input with shape H x W x N, where N channels i
 
 **Possible Fail Cases**:  Multiple peaks with approximately the same intensity and width may appear in the I<sub>obj</sub> profile as a result of other cell-objects being in different z-slice but overlapping almost completely. To overcome this challenge, initial parameters given to the Guassian fitting algorithm must be very close to the peak-of-interest. In this case, it is recommended that you provide a list of approximate z-locations for each cell (if they are close to overlapping with another object) and pass this as an argument in run_analysis. The algorithm will handle the remaining analysis and should provide a good 3D annotation, however, I recommend you examine the fitted I<sub>obj</sub> profile.
 
-
 **Tutorial**:
 
-First, save your z-stack images as a single .ome.tif file, a z-stack type image loadable in both ImageJ and Python.
+Example of application on cell images
+![Max Proj](/images/Tutorial_6.png)
+![Z-stack](/images/Tutorial_6_image.png)
+![Output binary](/images/Tutorial_6_output.png)
+
+**Coding Practices**:
+
+First, save your z-stack images as a single .ome.tif file, a z-stack type image loadable in both ImageJ and Python:
 
 ![Save .ome.tif files](/images/Tutorial_1.png)
 
-Load the saved .ome.tif file into Python.
+Load the saved .ome.tif file into Python:
 
 ![Load .ome.tif file](/images/Tutorial_2.png)
- 
+
+
 Load the 2D annotations into a 3D numpy array called ‘mask’ (shape H x W x N) with the binary mask of the nth cell placed into shape H x W x n channel. There are many ways to do this.
   - Load a single maximum projected binary image containing many cells where each cell is separated by a thin line. Run a label scheme such as from skimage.measure.label, and place each cell into its own channel. Email if you have questions.
-  - Load a JSON file with annotations, the setup of your script depends on the structure of the JSON file. An example is shown below.
+  - Load a JSON file with annotations, the setup of your script depends on the structure of the JSON file. An example is shown below:
 
 ![Load mask json file](/images/Tutorial_3.png)
 
-Produce the 3D annotations from the 2D annotated ‘mask’ data and save the output into a z-stack.
+Produce the 3D annotations from the 2D annotated ‘mask’ data and save the output into a z-stack:
 
 ![Find 3D annotations](/images/Tutorial_4.png)
 
-TEST CASES
+Evaluating test cases:
 
 ![Test cases](/images/Tutorial_5.png)
+
+**See bottom of Find_3D_annotation.py for code examples!**
