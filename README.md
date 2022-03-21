@@ -17,9 +17,9 @@ The program expects a binary mask input with shape H x W x N, where N channels i
 
 Example of application on cell images:
 
-| - | - |
-|---|---|
-| I am text to the left  | ![Max Proj](/images/Tutorial_6.png)|
+| - | - | - |
+|---|---|---|
+| ![Max Proj](/images/Tutorial_6.png) | [Z-stack](/images/Tutorial_6_image.gif) | ![Output binary](/images/Tutorial_6_output.gif) |
 | ![Z-stack](/images/Tutorial_6_image.gif) | I am text to the right |
 <!-- ![Max Proj](/images/Tutorial_6.png) -->
 <!-- ![Z-stack](/images/Tutorial_6_image.gif) -->
