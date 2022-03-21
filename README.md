@@ -25,7 +25,7 @@ Example of application on test cases with overlapping ellipsoids:
 
 | Max-Projected Image + 2D annotations | Generated Z-stack w/ noise | Ground-truth label | Predicted 3D cell annotations |
 |---|---|---|---|
-| <img src="/images/Tutorial_7_Max.png" alt="drawing" width="1500"/> | ![test Z-stack](/images/Tutorial_7_IM.gif) | ![gt test stack](/images/Tutorial_7_GT.gif) | ![test Output binary](/images/Tutorial_7_Pred.gif) |
+| <img src="/images/Tutorial_7_Max.png" alt="drawing" width="1000"/> | ![test Z-stack](/images/Tutorial_7_IM.gif) | ![gt test stack](/images/Tutorial_7_GT.gif) | ![test Output binary](/images/Tutorial_7_Pred.gif) |
 
 **Coding Practices**:
 
