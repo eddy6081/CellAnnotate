@@ -19,7 +19,7 @@ Example of application on cell images:
 
 | - | - | - |
 |---|---|---|
-| ![Max Proj](/images/Tutorial_6.png) | ![Z-stack](/images/Tutorial_6_image.gif) | ![Output binary](/images/Tutorial_6_output.gif) |
+| <img src="/images/Tutorial_6.png" alt="drawing" width="200"/> | ![Z-stack](/images/Tutorial_6_image.gif) | ![Output binary](/images/Tutorial_6_output.gif) |
 <!-- ![Max Proj](/images/Tutorial_6.png) -->
 <!-- ![Z-stack](/images/Tutorial_6_image.gif) -->
 <!-- ![Output binary](/images/Tutorial_6_output.gif) -->
