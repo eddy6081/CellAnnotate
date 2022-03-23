@@ -1,5 +1,5 @@
 # CellAnnotate
-Scripts used to create training data and annotations of cells from fluorescence microscopy images.
+Scripts used to create 3D annotations from 2D annotations of cells from fluorescence microscopy images.
 
 ## 3D Annotations from 2D Annotated Data
 *Author: Christopher Z. Eddy, eddych@oregonstate.edu*
