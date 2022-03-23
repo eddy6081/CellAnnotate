@@ -11,6 +11,8 @@ Each cell-object containing a set of labeled x, y pixels has an axial intensity 
 
 The program expects a binary mask input with shape H x W x N, where N channels is the number of annotated cells; each channel should contain only 1 labeled cell object [the maximum projected annotated cell] and the rest of the image is black-background. The input image should be H x W x Z, a typical Z stack with only 1 channel (gray).
 
+**REQUIREMENTS**: python = 3.7, scipy >= 1.5.4, numpy, matplotlib >= 3.3.2, scikit-image >= 0.16.2, tifffile, json
+
 **Possible Fail Cases**:  Multiple peaks with approximately the same intensity and width may appear in the I<sub>obj</sub> profile as a result of other cell-objects being in different z-slice but overlapping almost completely. To overcome this challenge, initial parameters given to the Guassian fitting algorithm must be very close to the peak-of-interest. In this case, it is recommended that you provide a list of approximate z-locations for each cell (if they are close to overlapping with another object) and pass this as an argument in run_analysis. The algorithm will handle the remaining analysis and should provide a good 3D annotation, however, I recommend you examine the fitted I<sub>obj</sub> profile.
 
 **Tutorial**:

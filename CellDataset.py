@@ -5,6 +5,11 @@ import scipy.stats
 import os
 import json
 
+"""
+Author: Christopher Z. Eddy
+Purpose: Import cell image dataset for application in 3D labeling from 2D annotations.
+See bottom of Find_3D_annotation.py for example usage!
+"""
 class CellDataset(object):
 
 	def __init__(self, dataset_path, dimensionality="3D"):
